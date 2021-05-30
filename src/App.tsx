@@ -1,42 +1,42 @@
-import React, { useCallback } from "react";
-import "./App.css";
-import { TaskType, Todolist } from "./components/todolists/Todolist";
-import { Title } from "./components/formItems/Title";
 import { Container, Grid, Paper } from "@material-ui/core";
+import React, { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { TaskType } from "./api/tasks-api";
+import "./App.css";
+import { Title } from "./components/formItems/Title";
+import { Header } from "./components/header/Header";
+import { Todolist } from "./components/todolists/Todolist";
 import {
   addTodolistAC,
+  addTodolistTC,
   changeTodolistFilterAC,
   changeTodolistTitleAC,
+  deleteTodolistTC,
+  fetchTodolistsThunk,
+  FilterValuesType,
   removeTodolistAC,
+  setTodolistAC,
+  TodolistDomainType,
+  updateTodolistTitle,
 } from "./state/reducers/todolist-reducer";
-import { useDispatch, useSelector } from "react-redux";
 import { RootStateType } from "./state/store";
-import { Header } from "./components/header/Header";
-
-export type FilterValuesType = "all" | "completed" | "active";
-
-export type TodolistsType = {
-  id: string;
-  title: string;
-  filter: FilterValuesType;
-};
 
 export type TaskStateType = {
   [key: string]: Array<TaskType>;
 };
 
 export const App = () => {
-  const todolists = useSelector<RootStateType, Array<TodolistsType>>(
-    (state) => state.todolists
-  );
-
-  //TODO
+  const todolists = useSelector<RootStateType, Array<TodolistDomainType>>((state) => state.todolists);
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchTodolistsThunk());
+  }, []);
+
   let removeTodolist = useCallback(
     (id: string) => {
-      dispatch(removeTodolistAC(id));
+      dispatch(deleteTodolistTC(id));
     },
     [dispatch]
   );
@@ -50,20 +50,20 @@ export const App = () => {
 
   let addNewTodolist = useCallback(
     (title: string) => {
-      dispatch(addTodolistAC(title));
+      dispatch(addTodolistTC(title));
     },
     [dispatch]
   );
 
   let newTodolistTitle = useCallback(
     (id: string, newTitle: string) => {
-      dispatch(changeTodolistTitleAC(id, newTitle));
+      dispatch(updateTodolistTitle(id, newTitle));
     },
     [dispatch]
   );
 
   return (
-    <div className="App">
+    <div className='App'>
       <Header />
       <Container fixed>
         <Grid container style={{ padding: "20px 0" }}>

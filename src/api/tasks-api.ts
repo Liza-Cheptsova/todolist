@@ -1,5 +1,4 @@
 import axios from "axios";
-import { NullLiteral } from "typescript";
 
 const instance = axios.create({
   baseURL: "https://social-network.samuraijs.com/api/1.1//todo-lists/",
@@ -9,12 +8,27 @@ const instance = axios.create({
   },
 });
 
-type TaskType = {
+export enum TaskStatuses {
+  New = 0,
+  InProgress = 1,
+  Completed = 2,
+  Draft = 3,
+}
+
+export enum TaskPriorities {
+  Low = 0,
+  Middle = 1,
+  Hi = 2,
+  Urgently = 3,
+  Later = 4,
+}
+
+export type TaskType = {
   description: string;
   title: string;
   completed: boolean;
-  status: number;
-  priority: number;
+  status: TaskStatuses;
+  priority: TaskPriorities;
   startDate: null | string;
   deadline: null | string;
   id: string;
@@ -23,13 +37,22 @@ type TaskType = {
   addedDate: string;
 };
 
-type GetTasksType = {
+export type GetTasksType = {
   error: string | null;
   totalCount: number;
   items: Array<TaskType>;
 };
 
-type ResponceTaskType = {
+export type UpdateTaskModelType = {
+  description: string;
+  title: string;
+  status: TaskStatuses;
+  priority: TaskPriorities;
+  deadline: null | string;
+  startDate: null | string;
+};
+
+export type ResponceTaskType = {
   resultCode: number;
   messages: Array<string>;
   data: { item: TaskType };
@@ -44,8 +67,8 @@ export const taskAPI = {
     return instance.post<ResponceTaskType>(`${todolistId}/tasks`, { title: title });
   },
 
-  updateTask(todolistId: string, taskId: string, title: string) {
-    return instance.put<ResponceTaskType>(`${todolistId}/tasks/${taskId}`, { title: title });
+  updateTask(todolistId: string, taskId: string, modal: UpdateTaskModelType) {
+    return instance.put<ResponceTaskType>(`${todolistId}/tasks/${taskId}`, modal);
   },
 
   deleteTask(todolistId: string, taskId: string) {
