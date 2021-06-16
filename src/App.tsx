@@ -1,93 +1,42 @@
-import { Container, Grid, Paper } from "@material-ui/core";
-import React, { useCallback, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { TaskType } from "./api/tasks-api";
+import { CircularProgress, Container, Grid } from "@material-ui/core";
 import "./App.css";
-import { Title } from "./components/formItems/Title";
 import { Header } from "./components/header/Header";
-import { Todolist } from "./components/todolists/Todolist";
-import {
-  addTodolistAC,
-  addTodolistTC,
-  changeTodolistFilterAC,
-  changeTodolistTitleAC,
-  deleteTodolistTC,
-  fetchTodolistsThunk,
-  FilterValuesType,
-  removeTodolistAC,
-  setTodolistAC,
-  TodolistDomainType,
-  updateTodolistTitle,
-} from "./state/reducers/todolist-reducer";
+import { ErrorSnackbar } from "./components/errorSnackbar/ErrorSnackbar";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { Login } from "./components/features/login/Login";
+import { TodolistsList } from "./components/todolists/TodolistsList";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { initializeAppTC } from "./state/reducers/auth-reducer";
 import { RootStateType } from "./state/store";
 
-export type TaskStateType = {
-  [key: string]: Array<TaskType>;
-};
-
 export const App = () => {
-  const todolists = useSelector<RootStateType, Array<TodolistDomainType>>((state) => state.todolists);
-
+  const isInitialized = useSelector<RootStateType>((state) => state.auth.isInitialized);
   const dispatch = useDispatch();
-
   useEffect(() => {
-    dispatch(fetchTodolistsThunk());
+    dispatch(initializeAppTC());
   }, []);
 
-  let removeTodolist = useCallback(
-    (id: string) => {
-      dispatch(deleteTodolistTC(id));
-    },
-    [dispatch]
-  );
-
-  let changeFilter = useCallback(
-    (value: FilterValuesType, todolistId: string) => {
-      dispatch(changeTodolistFilterAC(value, todolistId));
-    },
-    [dispatch]
-  );
-
-  let addNewTodolist = useCallback(
-    (title: string) => {
-      dispatch(addTodolistTC(title));
-    },
-    [dispatch]
-  );
-
-  let newTodolistTitle = useCallback(
-    (id: string, newTitle: string) => {
-      dispatch(updateTodolistTitle(id, newTitle));
-    },
-    [dispatch]
-  );
+  if (!isInitialized) {
+    return (
+      <div style={{ position: "fixed", top: "50%", textAlign: "center", width: "100%" }}>
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <div className='App'>
+      <ErrorSnackbar />
       <Header />
       <Container fixed>
-        <Grid container style={{ padding: "20px 0" }}>
-          <Title addTask={addNewTodolist} />
-        </Grid>
-
-        <Grid container spacing={4}>
-          {todolists.map((tl) => {
-            return (
-              <Grid item>
-                <Paper style={{ padding: "10px" }} elevation={3}>
-                  <Todolist
-                    key={tl.id}
-                    id={tl.id}
-                    title={tl.title}
-                    removeTodolist={removeTodolist}
-                    changeFilter={changeFilter}
-                    newTodolistTitle={newTodolistTitle}
-                    filter={tl.filter}
-                  />
-                </Paper>
-              </Grid>
-            );
-          })}
+        <Grid container justify='center' spacing={4}>
+          <Switch>
+            <Route exact path={"/"} render={() => <TodolistsList />} />
+            <Route path={"/login"} render={() => <Login />} />
+            <Route path={"/404"} render={() => <h1>404: PAGE NOT FOUND</h1>} />
+            <Redirect from={"*"} to={"/404"} />
+          </Switch>
         </Grid>
       </Container>
     </div>

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useCallback } from "react";
-import { deleteTaskThunk, newTaskTitleAC, removeTaskAC, updateTaskTC } from "../../../state/reducers/tasks-reducer";
+import { deleteTaskThunk, updateTaskTC } from "../../../state/reducers/tasks-reducer";
 import { Checkbox, IconButton } from "@material-ui/core";
 import { EditableSpan } from "../../ editableSpan/EditableSpan";
 import { DeleteForever } from "@material-ui/icons";
@@ -9,6 +9,7 @@ import { TaskStatuses, TaskType } from "../../../api/tasks-api";
 type PropsType = {
   task: TaskType;
   todolistId: string;
+  disabled?: boolean;
 };
 
 export const Task = React.memo((props: PropsType) => {
@@ -36,9 +37,10 @@ export const Task = React.memo((props: PropsType) => {
           inputProps={{ "aria-label": "secondary checkbox" }}
           onChange={onChangeStatusHandler}
           checked={props.task.status === TaskStatuses.Completed}
+          disabled={props.disabled}
         />
-        <EditableSpan value={props.task.title} newTitle={addNewTitle} />
-        <IconButton onClick={removeTaskHandler}>
+        <EditableSpan value={props.task.title} newTitle={addNewTitle} disabled={props.disabled} />
+        <IconButton onClick={removeTaskHandler} disabled={props.disabled}>
           <DeleteForever />
         </IconButton>
       </li>

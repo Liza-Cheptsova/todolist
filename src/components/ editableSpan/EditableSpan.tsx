@@ -1,46 +1,53 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from "react";
-import {TextField} from "@material-ui/core";
-
+import React, { ChangeEvent, KeyboardEvent, useState } from "react";
+import { TextField } from "@material-ui/core";
 
 type PropsType = {
-    value: string
-    newTitle: (newTitle: string) => void
-}
+  value: string;
+  newTitle: (newTitle: string) => void;
+  disabled?: boolean;
+};
 
 export const EditableSpan = React.memo((props: PropsType) => {
-    console.log('EditableSpan change')
-    const [editMode, setEditMode] = useState(false)
-    const [title, setTitle] = useState(props.value)
+  const [editMode, setEditMode] = useState(false);
+  const [title, setTitle] = useState(props.value);
 
-    const onDblClickHandler = () => {
-        setEditMode(!editMode)
-        setTitle(props.value)
+  const onDblClickHandler = () => {
+    setEditMode(!editMode);
+    setTitle(props.value);
+    if (props.disabled) {
+      setEditMode(false);
     }
+  };
 
-    const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.currentTarget.value)
+  console.log("props.disabled: ", props.disabled);
+
+  const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.currentTarget.value);
+  };
+
+  const activeViewMode = () => {
+    setEditMode(!editMode);
+    if (title.trim() !== "") {
+      props.newTitle(title);
     }
+  };
 
-    const activeViewMode = () => {
-        setEditMode(!editMode)
-        if (title.trim() !== "") {
-            props.newTitle(title)
-        }
+  const addTaskOnKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.charCode === 13) {
+      activeViewMode();
     }
+  };
 
-
-    const addTaskOnKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.charCode === 13) {
-            activeViewMode()
-        }
-    }
-
-
-    return editMode
-        ? <TextField type="text" value={title} onChange={changeTitle} autoFocus onBlur={activeViewMode}
-                 onKeyPress={addTaskOnKeyPressHandler}/>
-        : <span onDoubleClick={onDblClickHandler}>{props.value}</span>
-
-
-
-})
+  return editMode ? (
+    <TextField
+      type='text'
+      value={title}
+      onChange={changeTitle}
+      autoFocus
+      onBlur={activeViewMode}
+      onKeyPress={addTaskOnKeyPressHandler}
+    />
+  ) : (
+    <span onDoubleClick={onDblClickHandler}>{props.value}</span>
+  );
+});

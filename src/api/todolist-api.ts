@@ -15,6 +15,13 @@ export type TodolistsType = {
   title: string;
 };
 
+export type LoginParamsType = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+  captch?: string;
+};
+
 export type ResponceType<T = {}> = {
   resultCode: number;
   messages: Array<string>;
@@ -36,5 +43,17 @@ export const todolistAPI = {
 
   deleteTodoist(todolistId: string) {
     return instance.delete<ResponceType>(`todo-lists/${todolistId}`);
+  },
+};
+
+export const authAPI = {
+  login(data: LoginParamsType) {
+    return instance.post<ResponceType<{ userId: number }>>(`auth/login`, data);
+  },
+  me() {
+    return instance.get<ResponceType<{ id: number; email: string; login: string }>>(`auth/me`);
+  },
+  logout() {
+    return instance.delete<ResponceType>(`auth/login`);
   },
 };
