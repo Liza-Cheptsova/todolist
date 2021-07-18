@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginTC } from "../../../state/reducers/auth-reducer";
 import { RootStateType } from "../../../state/store";
 import { Redirect } from "react-router-dom";
+import "../../../App";
 
 export const Login = () => {
   const dispatch = useDispatch();
@@ -28,8 +29,8 @@ export const Login = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: "cheptsova.liza@mail.ru",
+      password: "7646412qwe",
       rememberMe: false,
     },
     validate: (values) => {
@@ -58,8 +59,8 @@ export const Login = () => {
   }
 
   return (
-    <Grid container justify='center'>
-      <Grid item xs={4}>
+    <Grid container justify="center" alignItems="center" className={"height_login"}>
+      <Grid item>
         <form onSubmit={formik.handleSubmit}>
           <FormControl>
             <FormLabel>
@@ -74,15 +75,19 @@ export const Login = () => {
               <p>Password: free</p>
             </FormLabel>
             <FormGroup>
-              <TextField label='Email' margin='normal' {...formik.getFieldProps("email")} />
+              <TextField label="Email" margin="normal" {...formik.getFieldProps("email")} />
               {formik.touched.email && formik.errors.email ? (
                 <div style={{ color: "red" }}>{formik.errors.email}</div>
               ) : null}
-              <TextField type='password' label='Password' margin='normal' {...formik.getFieldProps("password")} />
+              <TextField type="password" label="Password" margin="normal" {...formik.getFieldProps("password")} />
               {formik.touched.password && formik.errors.password ? (
                 <div style={{ color: "red" }}>{formik.errors.password}</div>
               ) : null}
-              <FormControlLabel label={"Remember me"} control={<Checkbox {...formik.getFieldProps("rememberMe")} />} />
+              <FormControlLabel
+                label={"Remember me"}
+                className={"mb"}
+                control={<Checkbox {...formik.getFieldProps("rememberMe")} />}
+              />
               <Button type={"submit"} variant={"contained"} color={"primary"}>
                 Login
               </Button>

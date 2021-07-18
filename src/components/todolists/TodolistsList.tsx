@@ -18,6 +18,7 @@ import { Todolist } from "./Todolist";
 
 export const TodolistsList = () => {
   const todolists = useSelector<RootStateType, Array<TodolistDomainType>>((state) => state.todolists);
+  const isLoggedIn = useSelector<RootStateType, boolean>((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -53,7 +54,6 @@ export const TodolistsList = () => {
     [dispatch]
   );
 
-  const isLoggedIn = useSelector<RootStateType, boolean>((state) => state.auth.isLoggedIn);
   if (!isLoggedIn) {
     return <Redirect to={"/login"} />;
   }

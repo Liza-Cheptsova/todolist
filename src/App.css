@@ -3,11 +3,17 @@
   justify-content: space-between;
 }
 
+body {
+  min-height: 100vh;
+}
+
 h3 {
   margin: 0;
 }
 
-.error, .error:focus, .error:active {
+.error,
+.error:focus,
+.error:active {
   border: red 1px solid;
   outline: red;
 }
@@ -32,4 +38,12 @@ h3 {
 
 .btns_container {
   margin: 0 0 10px 0;
+}
+
+.mb {
+  margin-bottom: 10px;
+}
+
+.height_login {
+  height: calc(100vh - 60px);
 }

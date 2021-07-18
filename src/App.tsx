@@ -17,20 +17,20 @@ export const App = () => {
     dispatch(initializeAppTC());
   }, []);
 
-  if (!isInitialized) {
-    return (
-      <div style={{ position: "fixed", top: "50%", textAlign: "center", width: "100%" }}>
-        <CircularProgress />
-      </div>
-    );
-  }
+  // if (!isInitialized) {
+  //   return (
+  //     <div style={{ position: "fixed", top: "50%", textAlign: "center", width: "100%" }}>
+  //       <CircularProgress />
+  //     </div>
+  //   );
+  // }
 
   return (
-    <div className='App'>
+    <div className="App">
       <ErrorSnackbar />
       <Header />
-      <Container fixed>
-        <Grid container justify='center' spacing={4}>
+      <Container fixed className={"container"}>
+        <Grid container justify="center" spacing={4}>
           <Switch>
             <Route exact path={"/"} render={() => <TodolistsList />} />
             <Route path={"/login"} render={() => <Login />} />
