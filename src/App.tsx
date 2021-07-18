@@ -1,4 +1,4 @@
-import { CircularProgress, Container, Grid } from "@material-ui/core";
+import { Container, Grid } from "@material-ui/core";
 import "./App.css";
 import { Header } from "./components/header/Header";
 import { ErrorSnackbar } from "./components/errorSnackbar/ErrorSnackbar";
@@ -6,16 +6,16 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { Login } from "./components/features/login/Login";
 import { TodolistsList } from "./components/todolists/TodolistsList";
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { initializeAppTC } from "./state/reducers/auth-reducer";
-import { RootStateType } from "./state/store";
+// import { RootStateType } from "./state/store";
 
 export const App = () => {
-  const isInitialized = useSelector<RootStateType>((state) => state.auth.isInitialized);
+  // const isInitialized = useSelector<RootStateType>((state) => state.auth.isInitialized);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(initializeAppTC());
-  }, []);
+  }, [dispatch]);
 
   // if (!isInitialized) {
   //   return (
